@@ -1,5 +1,8 @@
 name: Deployment pipeline
 
+env:
+  MESSAGE: ${{github.event.commits.*.message}}
+
 on:
   push:
     branches:
@@ -19,6 +22,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+
+      - name: Print Commit Message
+        run: echo "$MESSAGE"
 
       - name: Install dependencies
         run: npm install
