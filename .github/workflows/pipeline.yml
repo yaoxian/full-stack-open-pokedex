@@ -1,8 +1,5 @@
 name: Deployment pipeline
 
-env:
-  MESSAGE: ${{github.event.commits.*.message}}
-
 on:
   push:
     branches:
@@ -23,9 +20,6 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Print Commit Message
-        run: echo "$MESSAGE"
-
       - name: Install dependencies
         run: npm install
 
@@ -36,6 +30,8 @@ jobs:
         run: npm run test
 
       - name: Trigger deployment if tests pass
+        env:
+          MESSAGE: ${{github.event.commits.*.message}}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
 
   tag_release:
